@@ -1,18 +1,20 @@
 mod api;
 
-use clap::{load_yaml, Clap};
 use api::Client;
 
-#[derive(Clap)]
-struct Opts {
+use serde::Deserialize;
+
+#[derive(Deserialize, Debug)]
+struct Config {
     username: String,
     password: String,
     server: String
 }
 
 fn main() {
-    let _yaml = load_yaml!("cli.yml");
-    //let _matches = App::from(yaml).get_matches();
-    let client = Client::new("https://vikunja.traphouse.us", "Zedjones", "notPass");
+    dotenv::dotenv().unwrap();
+    let config = envy::from_env::<Config>().unwrap();
+    println!("{:?}", config);
+    let client = Client::new(&config.server, &config.username, &config.password);
     println!("{:?}", client);
 }
