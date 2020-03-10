@@ -28,7 +28,7 @@ impl Client {
         let token = match res.get("token") {
             Some(val) => match val.as_str() {
                 Some(val) => val,
-                None => return  Err("JWT token was not a string".to_string())
+                None => return Err("JWT token was not a string".to_string())
             },
             None => return Err("Response missing JWT token".to_string())
         };
@@ -43,11 +43,11 @@ impl Client {
             Ok(res) => res,
             Err(error) => return Err(error.to_string())
         };
-        let user: T = match serde_json::from_str(&res_str) {
-            Ok(user) => user,
+        let api_type: T = match serde_json::from_str(&res_str) {
+            Ok(api_type) => api_type,
             Err(error) => return Err(error.to_string())
         };
-        return Ok(user);
+        return Ok(api_type);
     }
 
     pub fn get_user_info(&self) -> Result<User, String> {
