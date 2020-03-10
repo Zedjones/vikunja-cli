@@ -18,6 +18,5 @@ fn main() {
     let client = Client::new(&config.server, &config.username, &config.password);
     println!("{:?}", client);
     let client_val = client.unwrap();
-    println!("{:?}", client_val.get_user_info());
-    println!("{:?}", client_val.get_list_info());
+    println!("{:?}", client_val.get_tasks_info());
 }

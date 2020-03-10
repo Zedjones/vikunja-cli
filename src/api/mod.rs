@@ -1,10 +1,13 @@
 mod list;
 mod user;
+mod task;
+mod label;
 
 use serde::de::DeserializeOwned;
 use ureq::json;
 use user::User;
 use list::List;
+use task::Task;
 
 #[derive(Debug)]
 pub struct Client {
@@ -59,4 +62,7 @@ impl Client {
         self.get_api_object::<Vec<List>>("lists")
     }
 
+    pub fn get_tasks_info(&self) -> Result<Vec<Task>, String> {
+        self.get_api_object::<Vec<Task>>("tasks/all")
+    }
 }
