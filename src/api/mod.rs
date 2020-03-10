@@ -3,6 +3,7 @@ mod user;
 
 use serde::{Serialize, Deserialize};
 use ureq::json;
+use user::User;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Client {
@@ -31,5 +32,21 @@ impl Client {
             None => return Err("Response missing JWT token".to_string())
         };
         Ok(Client{server: api_url, jwt_token: token.to_string()})
+    }
+
+    pub fn get_user_info(&self) -> Result<User, String> {
+        let resp = ureq::get(&format!("{}/user", self.server))
+            .set("Authorization", &format!("Bearer {}", self.jwt_token))
+            .call();
+        let res_str = match resp.into_string() {
+            Ok(res) => res,
+            Err(error) => return Err(error.to_string())
+        };
+        println!("{}", res_str);
+        let user: User = match serde_json::from_str(&res_str) {
+            Ok(user) => user,
+            Err(error) => return Err(error.to_string())
+        };
+        return Ok(user);
     }
 }

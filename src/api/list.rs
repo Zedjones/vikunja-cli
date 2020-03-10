@@ -1,13 +1,14 @@
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
+use chrono::{DateTime, Utc};
 use super::user::User;
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct List {
-    created: i64,
+    created: DateTime<Utc>,
     description: String,
     id: i32,
     identifier: String,
     owner: User,
     title: String,
-    updated: i64
+    updated: DateTime<Utc>
 }

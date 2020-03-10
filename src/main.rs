@@ -17,4 +17,5 @@ fn main() {
     println!("{:?}", config);
     let client = Client::new(&config.server, &config.username, &config.password);
     println!("{:?}", client);
+    println!("{:?}", client.unwrap().get_user_info());
 }

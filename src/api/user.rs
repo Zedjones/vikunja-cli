@@ -1,12 +1,13 @@
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
+use chrono::{DateTime, Utc};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct User {
     #[serde(rename = "avatarUrl")]
     avatar_url: String,
-    created: i64,
-    updated: i64,
-    email: String,
+    created: DateTime<Utc>,
+    updated: DateTime<Utc>,
+    email: Option<String>,
     id: i32,
     username: String
 }
