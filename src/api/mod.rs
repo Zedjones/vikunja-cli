@@ -2,12 +2,14 @@ mod list;
 mod user;
 mod task;
 mod label;
+mod namespace;
 
 use serde::de::DeserializeOwned;
 use ureq::json;
 use user::User;
 use list::List;
 use task::Task;
+use namespace::Namespace;
 
 #[derive(Debug)]
 pub struct Client {
@@ -64,5 +66,9 @@ impl Client {
 
     pub fn get_tasks_info(&self) -> Result<Vec<Task>, String> {
         self.get_api_object::<Vec<Task>>("tasks/all")
+    }
+
+    pub fn get_namespaces_info(&self) -> Result<Vec<Namespace>, String> {
+        self.get_api_object::<Vec<Namespace>>("namespaces")
     }
 }
