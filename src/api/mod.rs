@@ -1,15 +1,15 @@
 mod list;
 mod user;
 
-use serde::{Serialize, Deserialize, de::DeserializeOwned};
+use serde::de::DeserializeOwned;
 use ureq::json;
 use user::User;
 use list::List;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug)]
 pub struct Client {
     server: String,
-    jwt_token: String
+    agent: ureq::Agent
 }
 
 impl Client {
@@ -32,12 +32,13 @@ impl Client {
             },
             None => return Err("Response missing JWT token".to_string())
         };
-        Ok(Client{server: api_url, jwt_token: token.to_string()})
+        let mut agent = ureq::agent();
+        agent.set("Authorization", &format!("Bearer {}", token));
+        Ok(Client{server: api_url, agent})
     }
 
     fn get_api_object<T>(&self, path: &str) -> Result<T, String> where T: DeserializeOwned {
-        let resp = ureq::get(&format!("{}/{}", self.server, path))
-            .set("Authorization", &format!("Bearer {}", self.jwt_token))
+        let resp = self.agent.get(&format!("{}/{}", self.server, path))
             .call();
         let res_str = match resp.into_string() {
             Ok(res) => res,
