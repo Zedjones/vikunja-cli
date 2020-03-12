@@ -4,11 +4,11 @@ use super::user::User;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct List {
-    id: i32,
-    title: String,
-    description: String,
-    identifier: String,
-    owner: User,
-    created: DateTime<Utc>,
-    updated: DateTime<Utc>
+    pub id: i32,
+    pub title: String,
+    pub description: String,
+    pub identifier: String,
+    pub owner: User,
+    pub created: DateTime<Utc>,
+    pub updated: DateTime<Utc>
 }

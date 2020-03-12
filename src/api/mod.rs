@@ -56,12 +56,26 @@ impl Client {
         return Ok(api_type);
     }
 
+    fn put_api_object(&self, path: &str, json: serde_json::Value) -> Result<(), String> {
+        let resp = self.agent.put(&format!("{}/{}", self.server, path))
+            .send_json(json);
+        Ok(())
+    }
+
     pub fn get_user_info(&self) -> Result<User, String> {
         self.get_api_object::<User>("user")
     }
-
-    pub fn get_list_info(&self) -> Result<Vec<List>, String> {
+ 
+    pub fn get_lists_info(&self) -> Result<Vec<List>, String> {
         self.get_api_object::<Vec<List>>("lists")
+    }
+
+    pub fn get_list_info(&self, name: &str) -> Result<Option<List>, String> {
+        let mut lists = self.get_lists_info()?;
+        match lists.iter().position(|list| list.title == name) {
+            None => Ok(None),
+            Some(list_ind) => Ok(Some(lists.swap_remove(list_ind)))
+        }
     }
 
     pub fn get_tasks_info(&self) -> Result<Vec<Task>, String> {
