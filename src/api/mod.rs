@@ -59,7 +59,20 @@ impl Client {
     fn put_api_object(&self, path: &str, json: serde_json::Value) -> Result<(), String> {
         let resp = self.agent.put(&format!("{}/{}", self.server, path))
             .send_json(json);
-        Ok(())
+        if resp.ok() {
+            return Ok(())
+        }
+        let json = match resp.into_json() {
+            Ok(val) => val,
+            Err(err) => return Err(err.to_string())
+        };
+        Err(match json.get("message") {
+            Some(val) => match val.as_str() {
+                Some(val) => val.to_string(),
+                None => "Error message from server as not a string".to_string()
+            },
+            None => "Error from server missing message".to_string()
+        })
     }
 
     pub fn get_user_info(&self) -> Result<User, String> {
@@ -84,5 +97,17 @@ impl Client {
 
     pub fn get_namespaces_info(&self) -> Result<Vec<Namespace>, String> {
         self.get_api_object::<Vec<Namespace>>("namespaces")
+    }
+
+    pub fn add_task(&self, list_name: &str, title: &str) -> Result<(), String> {
+        let list = self.get_list_info(list_name)?;
+        match list {
+            None => Ok(()),
+            Some(list) => {
+                self.put_api_object(&format!("lists/{}", list.id), json!({
+                    "text": title
+                }))
+            }
+        }
     }
 }
