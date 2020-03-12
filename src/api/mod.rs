@@ -72,10 +72,10 @@ impl Client {
 
     pub fn get_list_info(&self, name: &str) -> Result<Option<List>, String> {
         let mut lists = self.get_lists_info()?;
-        match lists.iter().position(|list| list.title == name) {
-            None => Ok(None),
-            Some(list_ind) => Ok(Some(lists.swap_remove(list_ind)))
-        }
+        Ok(match lists.iter().position(|list| list.title == name) {
+            None => None,
+            Some(list_ind) => Some(lists.swap_remove(list_ind))
+        })
     }
 
     pub fn get_tasks_info(&self) -> Result<Vec<Task>, String> {
