@@ -108,12 +108,22 @@ impl Client {
     }
 
     pub fn add_task(&self, list_name: &str, title: &str) -> Result<(), String> {
-        let list = self.get_list_info(list_name)?;
-        match list {
-            None => Ok(()),
+        match self.get_list_info(list_name)? {
+            None => Err("List does not exist".to_string()),
             Some(list) => {
                 self.put_api_object(&format!("lists/{}", list.id), json!({
                     "text": title
+                }))
+            }
+        }
+    }
+
+    pub fn add_list(&self, namespace_name: &str, title: &str) -> Result<(), String> {
+        match self.get_namespace_info(namespace_name)? {
+            None => Err("Namespace does not exist".to_string()),
+            Some(namespace) => {
+                self.put_api_object(&format!("namespaces/{}/lists", namespace.id), json!({
+                    "title": title
                 }))
             }
         }
