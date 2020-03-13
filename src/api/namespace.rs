@@ -5,11 +5,11 @@ use super::list::List;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Namespace {
-    created: DateTime<Utc>,
-    description: String,
-    id: i32,
-    lists: Option<Vec<List>>,
-    name: String,
-    owner: User,
-    updated: DateTime<Utc>
+    pub created: DateTime<Utc>,
+    pub description: String,
+    pub id: i32,
+    pub lists: Option<Vec<List>>,
+    pub name: String,
+    pub owner: User,
+    pub updated: DateTime<Utc>
 }

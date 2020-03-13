@@ -1,7 +1,6 @@
 mod api;
 
 use api::Client;
-
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
@@ -16,5 +15,5 @@ fn main() {
     let config = envy::from_env::<Config>().unwrap();
     let client = Client::new(&config.server, &config.username, &config.password);
     let client_val = client.unwrap();
-    println!("{:?}", client_val.add_task("PLC", "Some tasks"));
+    println!("{:?}", client_val.get_namespaces_info());
 }

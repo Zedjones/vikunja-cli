@@ -99,6 +99,14 @@ impl Client {
         self.get_api_object::<Vec<Namespace>>("namespaces")
     }
 
+    pub fn get_namespace_info(&self, name: &str) -> Result<Option<Namespace>, String> {
+        let mut namespaces = self.get_namespaces_info()?;
+        Ok(match namespaces.iter().position(|namespace| namespace.name == name) {
+            None => None,
+            Some(list_ind) => Some(namespaces.swap_remove(list_ind))
+        })
+    }
+
     pub fn add_task(&self, list_name: &str, title: &str) -> Result<(), String> {
         let list = self.get_list_info(list_name)?;
         match list {
@@ -109,5 +117,11 @@ impl Client {
                 }))
             }
         }
+    }
+
+    pub fn add_namespace(&self, title: &str) -> Result<(), String> {
+        self.put_api_object("namespaces", json!({
+            "name": title
+        }))
     }
 }
