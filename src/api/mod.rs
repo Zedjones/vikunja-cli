@@ -134,4 +134,10 @@ impl Client {
             "name": title
         }))
     }
+
+    pub fn add_label(&self, title: &str) -> Result<(), String> {
+        self.put_api_object("labels", json!({
+            "title": title
+        }))
+    }
 }
