@@ -5,16 +5,27 @@ mod label;
 mod namespace;
 
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 use ureq::json;
-use user::User;
-use list::List;
-use task::Task;
-use namespace::Namespace;
+pub use label::Label;
+pub use user::User;
+pub use list::List;
+pub use task::Task;
+pub use namespace::Namespace;
 
 #[derive(Debug)]
 pub struct Client {
     server: String,
     agent: ureq::Agent
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct FullInfo {
+    pub labels: Vec<Label>,
+    pub user: User,
+    pub tasks: Vec<Task>,
+    pub lists: Vec<List>,
+    pub namespaces: Vec<Namespace>
 }
 
 impl Client {
