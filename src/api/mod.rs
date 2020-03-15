@@ -4,6 +4,8 @@ mod task;
 mod label;
 mod namespace;
 
+use std::thread;
+
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use ureq::json;
@@ -155,8 +157,21 @@ impl Client {
         }))
     }
 
-    fn load_all_info(config: Config) -> Result<FullInfo, String> {
+    fn load_all_info(self, config: Config) -> Result<FullInfo, String> {
         let client = Client::new(&config.server, &config.username, &config.password)?;
+        let tasks: Result<Vec<Task>, String>;
+        let tasks_handle = thread::spawn(|| {
+            self.get_tasks_info()
+        });
+        let lists_handle = thread::spawn(|| {
+            self.get_lists_info()
+        });
+        let namespaces_handle = thread::spawn(|| {
+            self.get_namespaces_info()
+        });
+        let user_info = thread::spawn(|| {
+            self.get_user_info()
+        });
         Err("placeholder".to_string())
     }
 }
