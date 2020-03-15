@@ -7,6 +7,9 @@ mod namespace;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use ureq::json;
+
+use super::config::Config;
+
 pub use label::Label;
 pub use user::User;
 pub use list::List;
@@ -150,5 +153,10 @@ impl Client {
         self.put_api_object("labels", json!({
             "title": title
         }))
+    }
+
+    fn load_all_info(config: Config) -> Result<FullInfo, String> {
+        let client = Client::new(&config.server, &config.username, &config.password)?;
+        Err("placeholder".to_string())
     }
 }

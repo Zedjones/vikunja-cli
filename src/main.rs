@@ -1,19 +1,13 @@
 mod api;
+mod config;
 
 use std::thread;
 use std::time::Duration;
 
 use api::*;
-use serde::Deserialize;
 use cursive::{Cursive, views::{Dialog, TextView}};
 use cursive_async_view::{AsyncView, AsyncState};
-
-#[derive(Deserialize, Debug)]
-struct Config {
-    username: String,
-    password: String,
-    server: String
-}
+use config::Config;
 
 fn main() {
     dotenv::dotenv().unwrap();
@@ -40,9 +34,4 @@ fn main() {
 
     siv.run();
     */
-}
-
-fn load_all_info(config: Config) -> Result<FullInfo, String> {
-    let client = Client::new(&config.server, &config.username, &config.password)?;
-    Err("placeholder".to_string())
 }
