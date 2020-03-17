@@ -14,7 +14,7 @@ fn main() {
     let config = envy::from_env::<Config>().unwrap();
     let client = Client::new(&config.server, &config.username, &config.password);
     let client_val = client.unwrap();
-    let namespace_info = client_val.get_namespace_info("School").unwrap().unwrap();
+    client_val.load_all_info();
 
     /*
     let mut siv = Cursive::default();
