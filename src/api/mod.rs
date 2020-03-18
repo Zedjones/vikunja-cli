@@ -90,32 +90,36 @@ impl Client {
         })
     }
 
-    pub fn get_user_info(&self) -> Result<User, String> {
+    pub fn get_user(&self) -> Result<User, String> {
         self.get_api_object::<User>("user")
     }
  
-    pub fn get_lists_info(&self) -> Result<Vec<List>, String> {
+    pub fn get_lists(&self) -> Result<Vec<List>, String> {
         self.get_api_object::<Vec<List>>("lists")
     }
 
+    pub fn get_labels(&self) -> Result<Vec<Label>, String> {
+        self.get_api_object::<Vec<Label>>("labels")
+    }
+
     pub fn get_list_info(&self, name: &str) -> Result<Option<List>, String> {
-        let mut lists = self.get_lists_info()?;
+        let mut lists = self.get_lists()?;
         Ok(match lists.iter().position(|list| list.title == name) {
             None => None,
             Some(list_ind) => Some(lists.swap_remove(list_ind))
         })
     }
 
-    pub fn get_tasks_info(&self) -> Result<Vec<Task>, String> {
+    pub fn get_tasks(&self) -> Result<Vec<Task>, String> {
         self.get_api_object::<Vec<Task>>("tasks/all")
     }
 
-    pub fn get_namespaces_info(&self) -> Result<Vec<Namespace>, String> {
+    pub fn get_namespaces(&self) -> Result<Vec<Namespace>, String> {
         self.get_api_object::<Vec<Namespace>>("namespaces")
     }
 
-    pub fn get_namespace_info(&self, name: &str) -> Result<Option<Namespace>, String> {
-        let mut namespaces = self.get_namespaces_info()?;
+    pub fn get_namespace(&self, name: &str) -> Result<Option<Namespace>, String> {
+        let mut namespaces = self.get_namespaces()?;
         Ok(match namespaces.iter().position(|namespace| namespace.name == name) {
             None => None,
             Some(list_ind) => Some(namespaces.swap_remove(list_ind))
@@ -134,7 +138,7 @@ impl Client {
     }
 
     pub fn add_list(&self, namespace_name: &str, title: &str) -> Result<(), String> {
-        match self.get_namespace_info(namespace_name)? {
+        match self.get_namespace(namespace_name)? {
             None => Err("Namespace does not exist".to_string()),
             Some(namespace) => {
                 self.put_api_object(&format!("namespaces/{}/lists", namespace.id), json!({
@@ -159,24 +163,26 @@ impl Client {
     pub fn load_all_info(self) -> Result<FullInfo, String> {
         crossbeam::scope(|scope| {
             let tasks_handle = scope.spawn(|_| {
-                self.get_tasks_info()
+                self.get_tasks()
             });
             let lists_handle = scope.spawn(|_| {
-                self.get_lists_info()
+                self.get_lists()
             });
             let namespaces_handle = scope.spawn(|_| {
-                self.get_namespaces_info()
+                self.get_namespaces()
             });
             let user_info_handle = scope.spawn(|_| {
-                self.get_user_info()
+                self.get_user()
             });
-            let tasks = tasks_handle.join().unwrap();
-            let namespaces = namespaces_handle.join().unwrap();
-            let lists = lists_handle.join().unwrap();
-            let user_info = user_info_handle.join().unwrap();
-            println!("{:?}", tasks);
-            println!("{:?}", namespaces);
-        }).unwrap();
-        Err("placeholder".to_string())
+            let labels_handle = scope.spawn(|_| {
+                self.get_labels()
+            });
+            let labels = labels_handle.join().unwrap()?;
+            let tasks = tasks_handle.join().unwrap()?;
+            let namespaces = namespaces_handle.join().unwrap()?;
+            let lists = lists_handle.join().unwrap()?;
+            let user = user_info_handle.join().unwrap()?;
+            Ok(FullInfo { labels, user, lists, namespaces, tasks })
+        }).unwrap()
     }
 }

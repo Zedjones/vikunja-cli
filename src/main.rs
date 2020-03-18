@@ -14,7 +14,7 @@ fn main() {
     let config = envy::from_env::<Config>().unwrap();
     let client = Client::new(&config.server, &config.username, &config.password);
     let client_val = client.unwrap();
-    client_val.load_all_info();
+    println!("{:?}", client_val.load_all_info());
 
     /*
     let mut siv = Cursive::default();
