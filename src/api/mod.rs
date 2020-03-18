@@ -160,7 +160,7 @@ impl Client {
         }))
     }
 
-    pub fn load_all_info(self) -> Result<FullInfo, String> {
+    pub fn get_all_info(self) -> Result<FullInfo, String> {
         crossbeam::scope(|scope| {
             let tasks_handle = scope.spawn(|_| {
                 self.get_tasks()
