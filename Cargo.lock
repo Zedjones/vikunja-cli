@@ -884,6 +884,7 @@ name = "vikunja_cli"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "crossbeam",
  "cursive",
  "cursive-async-view",
  "dotenv",

@@ -11,8 +11,6 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use ureq::json;
 
-use super::config::Config;
-
 pub use label::Label;
 pub use user::User;
 pub use list::List;
@@ -159,28 +157,26 @@ impl Client {
     }
 
     pub fn load_all_info(self) -> Result<FullInfo, String> {
-        let self_arc = Arc::new(self);
-        let tasks_self = self_arc.clone();
-        let lists_self = self_arc.clone();
-        let namespaces_self = self_arc.clone();
-        let tasks_handle = thread::spawn(move || {
-            tasks_self.get_tasks_info()
-        });
-        let lists_handle = thread::spawn(move || {
-            lists_self.get_lists_info()
-        });
-        let namespaces_handle = thread::spawn(move || {
-            namespaces_self.get_namespaces_info()
-        });
-        let user_info_handle = thread::spawn(move || {
-            self_arc.clone().get_user_info()
-        });
-        let tasks = tasks_handle.join().unwrap();
-        let namespaces = namespaces_handle.join().unwrap();
-        let lists = lists_handle.join().unwrap();
-        let user_info = user_info_handle.join().unwrap();
-        println!("{:?}", tasks);
-        println!("{:?}", namespaces);
+        crossbeam::scope(|scope| {
+            let tasks_handle = scope.spawn(|_| {
+                self.get_tasks_info()
+            });
+            let lists_handle = scope.spawn(|_| {
+                self.get_lists_info()
+            });
+            let namespaces_handle = scope.spawn(|_| {
+                self.get_namespaces_info()
+            });
+            let user_info_handle = scope.spawn(|_| {
+                self.get_user_info()
+            });
+            let tasks = tasks_handle.join().unwrap();
+            let namespaces = namespaces_handle.join().unwrap();
+            let lists = lists_handle.join().unwrap();
+            let user_info = user_info_handle.join().unwrap();
+            println!("{:?}", tasks);
+            println!("{:?}", namespaces);
+        }).unwrap();
         Err("placeholder".to_string())
     }
 }
