@@ -1,13 +1,12 @@
 mod api;
 mod config;
-
-use std::thread;
-use std::time::Duration;
+mod frontend;
 
 use api::*;
 use cursive::{Cursive, views::{Dialog, TextView, ScrollView}};
-use cursive_async_view::{AsyncView, AsyncState};
+use cursive_async_view::AsyncView;
 use config::Config;
+use frontend::*;
 
 fn main() {
     dotenv::dotenv().unwrap();
@@ -16,11 +15,6 @@ fn main() {
     let client_val = client.unwrap();
 
     let mut siv = Cursive::default();
-    /*
-    siv.add_layer(Dialog::around(TextView::new(namespace_info.created.to_rfc2822()))
-                                        .title("Namespace")
-                                        .button("Quit", |s| s.quit()));
-    */
     let async_view = AsyncView::new_with_bg_creator(&mut siv, move || {
         // this function is executed in a background thread, so we can block
         // here as long as we like
