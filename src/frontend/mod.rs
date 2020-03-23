@@ -22,8 +22,7 @@ fn make_list_buttons(all_info: FullInfo) -> ListView {
     let mut list_view = ListView::new();
     all_info.lists
         .iter()
-        .map(|list| Button::new_raw(&list.title, |s| s.quit()))
-        .map(|button| button.as_boxed_view())
+        .map(|list| Button::new_raw(&list.title, |s| s.quit()).as_boxed_view())
         .for_each(|button_view| list_view.add_child("", button_view));
     list_view
 }
