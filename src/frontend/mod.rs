@@ -1,7 +1,7 @@
-use super::api::{Client, List, FullInfo};
+use super::api::{Client, FullInfo};
 
 use cursive_async_view::AsyncView;
-use cursive::views::{Dialog, TextView, Button, ListView};
+use cursive::views::{Dialog, Button, ListView};
 use cursive::view::IntoBoxedView as _;
 use cursive::Cursive;
 

@@ -4,9 +4,6 @@ mod task;
 mod label;
 mod namespace;
 
-use std::thread;
-use std::sync::Arc;
-
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use ureq::json;
