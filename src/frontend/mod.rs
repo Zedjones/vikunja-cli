@@ -1,3 +1,5 @@
+mod task;
+
 use super::api::{Client, FullInfo};
 
 use cursive_async_view::AsyncView;
