@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
     #[serde(rename = "avatarUrl")]
-    avatar_url: String,
+    avatar_url: Option<String>,
     created: DateTime<Utc>,
     updated: DateTime<Utc>,
     email: Option<String>,
