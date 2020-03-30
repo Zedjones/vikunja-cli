@@ -8,6 +8,7 @@ pub fn add_task_view(client: &mut Client, list_name: &str) -> cursive::views::Di
         .title("Add task")
         .content(
             EditView::new()
+                    .on_submit(|s, text| handle_adding(client, list_name, s, text))
         )
 }
 
