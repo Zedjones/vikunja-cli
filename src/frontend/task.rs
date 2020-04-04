@@ -12,6 +12,7 @@ pub fn add_task_view(client: Rc<RefCell<Client>>, list_name: Rc<RefCell<String>>
             EditView::new()
                     .on_submit(move |s, text| handle_adding(client.clone(), list_name.clone(), s, text))
         )
+        .button("Cancel", |s| { s.pop_layer(); })
 }
 
 fn handle_adding(client: Rc<RefCell<Client>>, list_name: Rc<RefCell<String>>, s: &mut cursive::Cursive, task: &str) {

@@ -5,7 +5,6 @@ use task::add_task_view;
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use cursive_async_view::AsyncView;
 use cursive::views::{Dialog, Button, ListView};
 use cursive::view::IntoBoxedView as _;
 use cursive::Cursive;
@@ -26,7 +25,7 @@ fn make_list_buttons(client: Rc<RefCell<Client>>, all_info: FullInfo) -> ListVie
         .iter()
         .map(|list| {
                 let client_clone = client.clone();
-                let title = Rc::new(RefCell::from((&list.title).clone()));
+                let title = Rc::new(RefCell::from(list.title.clone()));
                 Button::new_raw(&list.title, move |s| {
                     s.add_layer(add_task_view(client_clone.clone(), title.clone()))
                 }).as_boxed_view()
