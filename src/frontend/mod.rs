@@ -5,21 +5,25 @@ use task::add_task_view;
 
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::sync::{Arc, Mutex};
 use cursive::views::{Dialog, Button, ListView};
 use cursive::view::IntoBoxedView as _;
 use cursive::Cursive;
 
 pub fn run_ui(client: Client) {
     let mut siv = Cursive::default();
-    let client_cell = Rc::new(RefCell::from(client));
-    let all_info = client_cell.borrow().get_all_info().unwrap();
-        
-    siv.add_layer(Dialog::around(make_list_buttons(client_cell, all_info)).button("Quit", |s| s.quit()));
+    let client_cell = Arc::new(Mutex::from(client));
+    let client_clone = client_cell.clone();
 
+    let async_view = cursive_async_view::AsyncView::new_with_bg_creator(&mut siv, move || {
+        Ok(client_clone.lock().unwrap().get_all_info().unwrap())
+    }, move |full_info| Dialog::around(make_list_buttons(client_cell.clone(), full_info)).button("Quit", |s| s.quit()));
+        
+    siv.add_layer(async_view);
     siv.run();
 }
 
-fn make_list_buttons(client: Rc<RefCell<Client>>, all_info: FullInfo) -> ListView {
+fn make_list_buttons(client: Arc<Mutex<Client>>, all_info: FullInfo) -> ListView {
     let mut list_view = ListView::new();
     all_info.lists
         .iter()
