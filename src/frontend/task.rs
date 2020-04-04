@@ -1,6 +1,6 @@
 use super::Client;
 
-use cursive::views::{Dialog, Button, ListView, EditView};
+use cursive::views::{Dialog, EditView};
 use std::cell::RefCell;
 use std::rc::Rc;
 //use cursive_async_view::AsyncView;
@@ -21,7 +21,10 @@ fn handle_adding(client: Rc<RefCell<Client>>, list_name: Rc<RefCell<String>>, s:
     else {
         match client.borrow().add_task(&list_name.borrow(), task) {
             Err(error) => s.add_layer(Dialog::info(error)),
-            _ => s.add_layer(Dialog::info(format!("Successfully added task to {}", &list_name.borrow())))
+            _ => {
+                s.pop_layer();
+                s.add_layer(Dialog::info(format!("Successfully added task to {}", &list_name.borrow())))
+            }
         };
     }
 }
