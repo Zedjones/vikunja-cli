@@ -111,6 +111,15 @@ impl Client {
         self.get_api_object::<Vec<Task>>("tasks/all")
     }
 
+    pub fn get_tasks_of_list(&self, list_name: &str) -> Result<Vec<Task>, String> {
+        match self.get_list_info(list_name)? {
+            None => Err("List does not exist".to_string()),
+            Some(list) => {
+                self.get_api_object::<Vec<Task>>(&format!("lists/{}/tasks", list.id))
+            }
+        }
+    }
+
     pub fn get_namespaces(&self) -> Result<Vec<Namespace>, String> {
         self.get_api_object::<Vec<Namespace>>("namespaces")
     }

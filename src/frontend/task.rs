@@ -1,6 +1,6 @@
 use super::Client;
 
-use cursive::views::{Dialog, EditView};
+use cursive::views::{Dialog, EditView, ListView, Button};
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
@@ -29,4 +29,16 @@ fn handle_adding(client: Arc<Mutex<Client>>, list_name: Rc<RefCell<String>>, s: 
             }
         };
     }
+}
+
+
+pub fn show_tasks(client: Arc<Mutex<Client>>, list_name: String) -> cursive::views::ListView {
+    let tasks = client.lock().unwrap().get_tasks_of_list(&list_name);
+    let list_view = ListView::new();
+    tasks
+        .iter()
+        .map(|task| {
+            Button::new_raw(&task.text, cb)
+        })
+    list_view
 }
