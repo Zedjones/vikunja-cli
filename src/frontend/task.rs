@@ -32,13 +32,13 @@ fn handle_adding(client: Arc<Mutex<Client>>, list_name: Rc<RefCell<String>>, s: 
 }
 
 
-pub fn show_tasks(client: Arc<Mutex<Client>>, list_name: String) -> cursive::views::ListView {
-    let tasks = client.lock().unwrap().get_tasks_of_list(&list_name);
+pub fn show_tasks(client: Arc<Mutex<Client>>, list_name: String) -> Result<cursive::views::ListView, String> {
+    let tasks = client.lock().unwrap().get_tasks_of_list(&list_name)?;
     let list_view = ListView::new();
     tasks
         .iter()
         .map(|task| {
             Button::new_raw(&task.text, cb)
-        })
+        });
     list_view
 }

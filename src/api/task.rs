@@ -5,35 +5,35 @@ use super::label::Label;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Task {
-    assignees: Option<Vec<User>>,
-    created: DateTime<Utc>,
+    pub assignees: Option<Vec<User>>,
+    pub created: DateTime<Utc>,
     #[serde(rename = "createdBy")]
-    created_by: User,
-    description: String,
-    done: bool,
+    pub created_by: User,
+    pub description: String,
+    pub done: bool,
     #[serde(rename = "doneAt")]
-    done_at: Option<DateTime<Utc>>,
+    pub done_at: Option<DateTime<Utc>>,
     #[serde(rename = "dueDate")]
-    due_date: Option<DateTime<Utc>>,
+    pub due_date: Option<DateTime<Utc>>,
     #[serde(rename = "endDate")]
-    end_date: Option<DateTime<Utc>>,
+    pub end_date: Option<DateTime<Utc>>,
     #[serde(rename = "hexColor")]
-    hex_color: String,
-    id: i32,
-    identifier: String,
-    index: i32,
-    labels: Option<Vec<Label>>,
+    pub hex_color: String,
+    pub id: i32,
+    pub identifier: String,
+    pub index: i32,
+    pub labels: Option<Vec<Label>>,
     #[serde(rename = "listID")]
-    list_id: i32,
+    pub list_id: i32,
     #[serde(rename = "percentDone")]
-    percent_done: f32,
-    priority: i32,
+    pub percent_done: f32,
+    pub priority: i32,
     #[serde(rename = "reminderDates")]
-    reminder_dates: Option<Vec<DateTime<Utc>>>,
+    pub reminder_dates: Option<Vec<DateTime<Utc>>>,
     #[serde(rename = "repeatAfter")]
-    repeat_after: i32,
+    pub repeat_after: i32,
     #[serde(rename = "startDate")]
-    start_date: Option<DateTime<Utc>>,
-    text: String,
-    updated: DateTime<Utc>
+    pub start_date: Option<DateTime<Utc>>,
+    pub text: String,
+    pub updated: DateTime<Utc>
 }
