@@ -32,13 +32,22 @@ fn handle_adding(client: Arc<Mutex<Client>>, list_name: Rc<RefCell<String>>, s: 
 }
 
 
-pub fn show_tasks(client: Arc<Mutex<Client>>, list_name: String) -> Result<cursive::views::ListView, String> {
-    let tasks = client.lock().unwrap().get_tasks_of_list(&list_name)?;
-    let list_view = ListView::new();
+pub fn show_tasks(client: Arc<Mutex<Client>>, list_name: Rc<RefCell<String>>) -> Result<cursive::views::Dialog, String> {
+    let tasks = client.lock().unwrap().get_tasks_of_list(&list_name.borrow())?;
+    let mut list_view = ListView::new();
     tasks
         .iter()
         .map(|task| {
-            Button::new_raw(&task.text, cb)
-        });
-    list_view
+            Button::new_raw(&task.text, |s| { })
+        })
+        .for_each(|button_view| list_view.add_child("", button_view));
+    let dialog = 
+        Dialog::around(list_view)
+        .button("Add", move |s| {
+            let client_clone = client.clone();
+            let list_name_clone = list_name.clone();
+            s.add_layer(add_task_view(client_clone, list_name_clone))
+        })
+        .button("Close", |s| { s.pop_layer(); });
+    Ok(dialog)
 }

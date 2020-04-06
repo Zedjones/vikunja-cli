@@ -1,7 +1,7 @@
 mod task;
 
 use super::api::{Client, FullInfo};
-use task::add_task_view;
+use task::{add_task_view, show_tasks};
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -31,7 +31,10 @@ fn make_list_buttons(client: Arc<Mutex<Client>>, all_info: FullInfo) -> ListView
                 let client_clone = client.clone();
                 let title = Rc::new(RefCell::from(list.title.clone()));
                 Button::new_raw(&list.title, move |s| {
-                    s.add_layer(add_task_view(client_clone.clone(), title.clone()))
+                    match show_tasks(client_clone.clone(), title.clone()) {
+                        Ok(view) => s.add_layer(view),
+                        Err(err_str) => s.add_layer(Dialog::info(err_str))
+                    };
                 }).as_boxed_view()
             }
         )
