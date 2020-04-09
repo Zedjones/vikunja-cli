@@ -1,7 +1,7 @@
 mod task;
 
 use super::api::{Client, FullInfo};
-use task::{add_task_view, show_tasks};
+use task::show_tasks;
 
 use std::cell::RefCell;
 use std::rc::Rc;

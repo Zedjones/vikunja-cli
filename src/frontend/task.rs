@@ -38,7 +38,7 @@ pub fn show_tasks(client: Arc<Mutex<Client>>, list_name: Rc<RefCell<String>>) ->
     tasks
         .iter()
         .map(|task| {
-            Button::new_raw(&task.text, |s| { })
+            Button::new_raw(&task.text, |_s| { })
         })
         .for_each(|button_view| list_view.add_child("", button_view));
     let dialog = 
